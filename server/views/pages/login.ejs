@@ -6,16 +6,34 @@
     <title>Document</title>
   </head>
   <body>
-    <a href="/login">Login</a>
-    <a href="/register">Register</a>
-    <form method="POST" action="/login">
-      <input type="email" name="email" placeholder="email"  required/>
-      <input type="password" name="password" placeholder="Password"  required/>
-      <input type="submit" value="login" />
+    <%- include('../partials/head') %>
 
-      
-      <% if (typeof message !== 'undefined') { %>
-        <p><%= message %></p>
-        <% } %>
+    <form method="POST" action="/login">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Email address</label>
+        <input
+          type="email"
+          name="email"
+          class="form-control"
+          aria-describedby="emailHelp"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          name="password"
+          id="exampleInputPassword1"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+
+    <% if (typeof message !== 'undefined') { %>
+    <div class="alert alert-danger" role="alert"><%= message %></div>
+
+    <% } %> <%- include('../partials/footer') %>
   </body>
 </html>

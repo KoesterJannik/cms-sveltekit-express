@@ -6,7 +6,8 @@
     <title>Document</title>
   </head>
   <body>
-    DASHBOARD
+    <%- include('../../partials/authHead') %>
+    <p>Your ID is # <%= user.id %></p>
     <h1>Hello, <%= user.email %></h1>
     <a href="/logout">Logout</a>
   </body>

@@ -1,13 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    Welcome to our CMS
-    <a href="/login">Login</a>
-    <a href="/register">Register</a>
+
+    <%- include('../partials/head') %>
+    <main class="px-3">
+      <h1>Your own portfolio cms.</h1>
+      <p class="lead">Create your content and then consume it using REST</p>
+      <p class="lead">
+        <a
+          href="/register"
+          class="btn btn-lg btn-secondary fw-bold border-white bg-white"
+          >Lets start</a
+        >
+      </p>
+    </main>
+    <%- include('../partials/footer') %>
   </body>
 </html>

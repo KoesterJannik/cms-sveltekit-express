@@ -6,6 +6,7 @@ import { prisma } from "./db";
 import { generateJwt, hashPassword, verifyPassword } from "./auth";
 import { isAuthenticated } from "./middleware";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 const PORT = process.env.PORT || 3000;
 
@@ -13,6 +14,12 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(cookieParser());
+// enable CORS and allow all origins
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 app.get("/", (req, res) => {
   res.render("pages/index");
@@ -105,6 +112,83 @@ app.get("/dashboard", isAuthenticated, async (req: any, res) => {
 app.get("/logout", (req, res) => {
   res.clearCookie("token");
   res.redirect("/");
+});
+
+app.get("/manage-content", isAuthenticated, async (req: any, res) => {
+  const allProjects = await prisma.projects.findMany({
+    where: { userId: req.userId },
+  });
+  console.log(allProjects);
+  return res.render("pages/auth/manage-content", {
+    allProjects,
+  });
+});
+app.post(
+  "/manage-content/create-project",
+  isAuthenticated,
+  async (req: any, res) => {
+    if (!req.body.projectName || !req.body.projectDescription)
+      return res.redirect("/manage-content");
+    await prisma.projects.create({
+      data: {
+        name: req.body.projectName,
+        description: req.body.projectDescription,
+        userId: req.userId,
+      },
+    });
+    return res.redirect("/manage-content");
+  }
+);
+
+app.post(
+  "/manage-content/delete-project/:id",
+  isAuthenticated,
+  async (req: any, res) => {
+    console.log("HIT");
+    await prisma.projects.delete({
+      where: {
+        id: parseInt(req.params.id),
+        userId: req.userId,
+      },
+    });
+    return res.redirect("/manage-content");
+  }
+);
+
+app.post(
+  "/manage-content/edit-project/:id",
+  isAuthenticated,
+  async (req: any, res) => {
+    await prisma.projects.update({
+      where: {
+        id: parseInt(req.params.id),
+        userId: req.userId,
+      },
+      data: {
+        name: req.body.projectName,
+        description: req.body.projectDescription,
+      },
+    });
+    return res.redirect("/manage-content");
+  }
+);
+
+app.get("/rest/projects/:userId", async (req, res) => {
+  const projects = await prisma.projects.findMany({
+    where: { userId: parseInt(req.params.userId) },
+  });
+  return res.json(projects);
+});
+// get a single project from user
+
+app.get("/rest/projects/:userId/:projectId", async (req, res) => {
+  const project = await prisma.projects.findUnique({
+    where: {
+      id: parseInt(req.params.projectId),
+      userId: parseInt(req.params.userId),
+    },
+  });
+  return res.json(project);
 });
 
 app.listen(PORT, () => {

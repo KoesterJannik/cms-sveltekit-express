@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <%- include('../../partials/authHead') %> You can manage your content here
+
+    <form method="POST" action="/manage-content/create-project">
+      <div class="mb-3">
+        <label class="form-label">What is was your Project Name?</label>
+        <input type="text" name="projectName" class="form-control" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Give a small description</label>
+        <input type="text" class="form-control" name="projectDescription" />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Create Project</button>
+    </form>
+
+    <% for (let i = 0; i < allProjects.length; i++) { %> <%= allProjects[i].name
+    %> <%= allProjects[i].description %>
+
+    <form
+      method="POST"
+      action="/manage-content/edit-project/<%= allProjects[i].id %>"
+    >
+      <div class="mb-3">
+        <label class="form-label">What is was your Project Name?</label>
+        <input
+          value="<%= allProjects[i].name %>"
+          type="text"
+          name="projectName"
+          class="form-control"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Give a small description</label>
+        <input
+          value="<%= allProjects[i].description %>"
+          type="text"
+          class="form-control"
+          name="projectDescription"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Update Project</button>
+    </form>
+    <form
+      method="POST"
+      action="/manage-content/delete-project/<%= allProjects[i].id %>"
+    >
+      <input type hidden name="id" value="<%= allProjects[i].id %>" />
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+
+    <% } %>
+  </body>
+</html>
