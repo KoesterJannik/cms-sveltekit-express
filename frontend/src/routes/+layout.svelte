@@ -1,3 +1,0 @@
-OUR BLOG
-
-<slot />

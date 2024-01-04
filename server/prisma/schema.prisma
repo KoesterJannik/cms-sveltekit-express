@@ -24,3 +24,12 @@ model Projects {
   user        User   @relation(fields: [userId], references: [id])
   userId      Int
 }
+
+model ScrapedProduct {
+  id        Int      @id @default(autoincrement())
+  website   String
+  name      String
+  price     Float
+  skuNumber String
+  updatedAt DateTime
+}

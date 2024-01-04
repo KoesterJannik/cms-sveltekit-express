@@ -7,6 +7,7 @@ import { generateJwt, hashPassword, verifyPassword } from "./auth";
 import { isAuthenticated } from "./middleware";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { scrapeAsphaltGoldData } from "./scraper/site/asphaltgold";
 
 const PORT = process.env.PORT || 3000;
 
@@ -30,7 +31,6 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  console.log(req.body);
   if (!req.body.email || !req.body.password) {
     return res.render("pages/login", {
       message: "Please provide an email and password",
@@ -70,7 +70,6 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  console.log(req.body);
   if (!req.body.email || !req.body.password) {
     return res.render("pages/register", {
       message: "Please provide an email and password",
@@ -118,7 +117,7 @@ app.get("/manage-content", isAuthenticated, async (req: any, res) => {
   const allProjects = await prisma.projects.findMany({
     where: { userId: req.userId },
   });
-  console.log(allProjects);
+
   return res.render("pages/auth/manage-content", {
     allProjects,
   });
@@ -144,7 +143,6 @@ app.post(
   "/manage-content/delete-project/:id",
   isAuthenticated,
   async (req: any, res) => {
-    console.log("HIT");
     await prisma.projects.delete({
       where: {
         id: parseInt(req.params.id),
@@ -191,6 +189,7 @@ app.get("/rest/projects/:userId/:projectId", async (req, res) => {
   return res.json(project);
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  await scrapeAsphaltGoldData();
   console.log(`Server listening on ${PORT}`);
 });
